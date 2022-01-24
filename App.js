@@ -5,10 +5,8 @@ import LoginScreen from './src/screens/LoginScreen';
 import SplashScreen from './src/screens/SplashScreen';
 import jwtDecode from 'jwt-decode';
 import AuthContext from './src/context/AuthContext';
-import Home from './src/screens/Home';
 import TabNavigation from './src/navigation/TabNavigation';
-import { StatusBar } from 'react-native';
-
+import AwesomeIcon from 'react-native-vector-icons/FontAwesome';
 const App = () => {
 const [showSplash, setShowSplash] = useState(true)
 const [auth, setAuth] = useState(undefined)
@@ -59,8 +57,11 @@ const authData = useMemo(
 if (auth === undefined) return null
   return (
     <AuthContext.Provider value={authData}>
-      <PaperProvider>
-        
+      <PaperProvider
+        settings={{
+          icon: props => <AwesomeIcon {...props} />,
+        }}
+      >
         {showSplash?<SplashScreen style={{flex:1}}/> : auth?
         <TabNavigation/>
         :<LoginScreen style={{flex:1}}/>}
