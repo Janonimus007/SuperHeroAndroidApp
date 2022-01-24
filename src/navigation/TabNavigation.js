@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MyAccount from '../screens/MyAccount';
 import StackNavigation from './StackNavigation';
+import Icon from 'react-native-vector-icons/Ionicons';  
 
 const Tab = createBottomTabNavigator();
 const TabNavigation = () => {
@@ -10,12 +11,22 @@ const TabNavigation = () => {
     <NavigationContainer>
       <Tab.Navigator>
         <Tab.Screen
-           name="Welcome to home" 
-           component={StackNavigation} 
-          options={{headerShown:false}}
+          name="home" 
+          component={StackNavigation} 
+          options={{
+            headerShown:false,
+            tabBarIcon:()=><Icon name='home' size={20}/>
+          }}
 
         />
-        <Tab.Screen name="myacountt" component={MyAccount} />
+        <Tab.Screen 
+          name="myacountt" 
+          component={MyAccount} 
+          options={{
+            headerShown:false,
+            tabBarIcon:()=><Icon name='skull' size={20}/>
+          }}
+          />
       </Tab.Navigator>
     </NavigationContainer>
   )

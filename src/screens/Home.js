@@ -2,19 +2,24 @@ import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, ImageBackground, StatusBar, ToastAndroid, ViewPropTypes, ScrollView, TouchableOpacity} from 'react-native'
 import axios from 'axios';
 import { Avatar, Button, Searchbar, TextInput } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 const Home = () => {
   const [hero, setHero] = useState(null);
   const [heroSearch, setHeroSearch] = useState(null);
   const [loading, setLoading] = useState(false);
+  const navigation = useNavigation()
   const handleChange =(heroName)=>{
     setHero(heroName)
   }
   const cleanSearch =()=>{
     setHeroSearch(null)
+    setHero(null)
+  }
+  const theStrongest =(heros)=>{
+    console.log('el mas fuerte');
   }
   const searchHero =()=>{
     const url = 'https://superheroapi.com/api/5018736881482580'
-    console.log(hero);
     if(!hero){
       ToastAndroid.showWithGravity(
         "write your superhero",
@@ -36,6 +41,9 @@ const Home = () => {
     
     }
 
+  }
+  const showHero =(showHero)=>{
+      navigation.navigate('showhero',showHero)
   }
   return (
     <>
@@ -61,18 +69,26 @@ const Home = () => {
         style={styles.SearchButton}
         mode='contained'>Search</Button>
         {heroSearch != null &&(
-        <Button
-        onPress={cleanSearch}
-         style={styles.SearchButton}
-          mode='contained'
-        >Clean search</Button>
+          <View style={{flexDirection:'row',justifyContent:'space-around'}}>
+           <Button
+            onPress={cleanSearch}
+            style={styles.SearchButton}
+            mode='contained'
+           >Clean search</Button>
+            <Button
+              onPress={()=>theStrongest(heroSearch)}
+              style={styles.SearchButton}
+              mode='contained'
+            >the strongest</Button>
+          </View>
+
         )}
 
         {heroSearch != null &&(
           <ScrollView>
             {
               heroSearch.map((superHero)=>(
-                <TouchableOpacity key={superHero.id} onPress={()=>console.log('hola')}>
+                <TouchableOpacity key={superHero.id} onPress={()=>showHero(superHero)}>
                 <View style={styles.containerHero}> 
                   <Avatar.Image size={50} 
                   source={{uri:`${superHero.image.url}`}}
