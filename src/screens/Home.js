@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ImageBackground, StatusBar, ToastAndroid, ViewP
 import axios from 'axios';
 import { Avatar, Button, Searchbar, TextInput } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
+import { getMeHero } from '../api/superHero';
 const Home = () => {
   const [hero, setHero] = useState(null);
   const [heroSearch, setHeroSearch] = useState(null);
@@ -11,15 +12,7 @@ const Home = () => {
   const handleChange =(heroName)=>{
     setHero(heroName)
   }
-  const cleanSearch =()=>{
-    setHeroSearch(null)
-    setHero(null)
-  }
-  const theStrongest =(heros)=>{
-    console.log('el mas fuerte');
-  }
-  const searchHero =()=>{
-    const url = 'https://superheroapi.com/api/5018736881482580'
+  const searchHero = async () => {
     if(!hero){
       ToastAndroid.showWithGravity(
         "write your superhero",
@@ -27,29 +20,15 @@ const Home = () => {
         ToastAndroid.CENTER
       );
     }else{ 
-      setLoading(true)
-      axios({
-      method: 'get',
-      url: `${url}/search/${hero}`,
-    }).then((response) => {
-   
-      setHeroSearch(response.data.results);
-     if(response){
-       setLoading(false)
-     }
-    });
-    
+      const result = await getMeHero(hero)
+      navigation.navigate('filter',result)
     }
 
-  }
-  const showHero =(showHero)=>{
-      navigation.navigate('showhero',showHero)
   }
   return (
     <>
     <StatusBar backgroundColor={'black'}/>
     <View style={styles.container}>
-      
       <ImageBackground
        source={require('../assets/images/blackimage.jpg')} 
       resizeMode="cover"
@@ -68,39 +47,6 @@ const Home = () => {
         onPress={searchHero}
         style={styles.SearchButton}
         mode='contained'>Search</Button>
-        {heroSearch != null &&(
-          <View style={{flexDirection:'row',justifyContent:'space-around'}}>
-           <Button
-            onPress={cleanSearch}
-            style={styles.SearchButton}
-            mode='contained'
-           >Clean search</Button>
-            <Button
-              onPress={()=>theStrongest(heroSearch)}
-              style={styles.SearchButton}
-              mode='contained'
-            >the strongest</Button>
-          </View>
-
-        )}
-
-        {heroSearch != null &&(
-          <ScrollView>
-            {
-              heroSearch.map((superHero)=>(
-                <TouchableOpacity key={superHero.id} onPress={()=>showHero(superHero)}>
-                <View style={styles.containerHero}> 
-                  <Avatar.Image size={50} 
-                  source={{uri:`${superHero.image.url}`}}
-                  style={{marginRight:10}} />
-                  <Text style={styles.nameHero}>{superHero.name}</Text>
-                </View>
-                </TouchableOpacity>
-     
-              ))
-            }
-          </ScrollView>
-        )}
       </ImageBackground>
     </View>
     
@@ -132,19 +78,5 @@ const styles = StyleSheet.create({
   SearchButton:{
     marginHorizontal:20,
     marginVertical:5
-  },
-  containerHero:{
-    flex:1,flexDirection:'row',
-    marginVertical:7,
-    alignItems:'center',
-    marginHorizontal:10,
-    borderBottomWidth:0.2,
-    borderBottomColor:'red',
-  
-  },
-  nameHero:{
-    color:'white',
-    fontSize:20
-
   }
 })
