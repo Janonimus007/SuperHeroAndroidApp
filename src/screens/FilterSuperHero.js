@@ -60,7 +60,7 @@ const FilterSuperHero = () => {
        source={require('../assets/images/blackimage.jpg')} 
       resizeMode="cover"
       style={styles.imageback}>
-        {heros == null && (<ActivityIndicator/>)}
+        {heros == null && (<Text style={{color:'white',textAlign:'center',fontSize:40}}>No results found</Text>)}
          {heros != null &&(
           <ScrollView
           refreshControl={
