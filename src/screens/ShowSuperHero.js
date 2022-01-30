@@ -3,7 +3,10 @@ import React from 'react';
 import { useRoute } from '@react-navigation/native';
 import NavBar from '../components/NavBar';
 import { List } from 'react-native-paper';
-
+/**
+ * 
+ * @returns view
+ */
 const ShowSuperHero = () => {
   const route = useRoute()
   let appearance = route.params?.appearance
@@ -13,8 +16,6 @@ const ShowSuperHero = () => {
   let nameHero = route.params?.name
   let powerstats = route.params?.powerstats
   let heroWork = route.params?.work
-
-  console.log(appearance)
   return (
     <>
     <NavBar/>
