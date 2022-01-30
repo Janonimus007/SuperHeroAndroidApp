@@ -1,20 +1,58 @@
-import { View, Text, StyleSheet, ImageBackground, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, ScrollView, TouchableOpacity,RefreshControl } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import NavBar from '../components/NavBar';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { ActivityIndicator, Avatar, Button } from 'react-native-paper';
-
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+}
 const FilterSuperHero = () => {
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
   const [heros, setHeros] = useState(null);
+  const [firstload, setFirstload] = useState(false);
   const route = useRoute()
   const navigation = useNavigation()
   useEffect(() => {
-    setHeros(route.params.results)
-
-  }, []);
+    if(firstload ===false){
+      setHeros(route?.params?.results)
+      setFirstload(true)
+    }
+  }, [heros]);
   const showHero =(showHero)=>{
     navigation.navigate('showhero',showHero)
   }
+  const orderBy =(more)=>{
+    if(more === 'moreStrong'){
+      console.log('morestrong');
+      heros.sort((o1,o2)=>{
+        if(o1.powerstats.power<o2.powerstats.power){
+          return -1
+        }else if(o1.powerstats.power>o2.powerstats.power){
+          return 1
+        }else{
+          return 0
+        }
+      })
+    }else{
+      console.log('moreheight');
+      heros.sort((o1,o2)=>{
+        if(o1.powerstats.combat<o2.powerstats.combat){
+          return -1
+        }else if(o1.powerstats.combat>o2.powerstats.combat){
+          return 1
+        }else{
+          return 0
+        }
+      })
+    }
+    onRefresh()
+  }
+
   return (
     <View style={styles.container}>
       <NavBar/>
@@ -24,24 +62,36 @@ const FilterSuperHero = () => {
       style={styles.imageback}>
         {heros == null && (<ActivityIndicator/>)}
          {heros != null &&(
-          <ScrollView>
+          <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            />
+          }>
             <View style={{flexDirection:'row',justifyContent:'space-around',marginVertical:10}}>
-              <Button mode='contained' color='white'>mas fuerte</Button>
-              <Button mode='contained' color='white'>mas alto</Button>
+              <Button mode='contained' color='white' onPress={()=>orderBy('moreStrong')}>Greater power</Button>
+              <Button mode='contained' color='white' onPress={()=>orderBy('moreHeight')}>Better combat</Button>
             </View>
             {
               heros?.map((superHero)=>(
-                
                 <TouchableOpacity key={superHero.id} onPress={()=>showHero(superHero)}>
                 <View style={styles.containerHero}> 
                 {/* {console.log('informacion, ',superHero)} */}
                   <Avatar.Image size={50} 
                   source={{uri:`${superHero.image.url}`}}
                   style={{marginRight:10}} />
-                  <Text style={styles.nameHero}>{superHero.name}</Text>
+                  <View>
+                    <Text style={styles.nameHero}>{superHero.name}</Text>
+                     {superHero.powerstats.power==='null'?
+                        <Text style={styles.nameHero}>Power: unknown</Text>:
+                        <Text style={styles.nameHero}>Power: {superHero.powerstats.power}</Text>}
+                      {superHero.powerstats.combat==='null'?
+                        <Text style={styles.nameHero}>Combat: unknown</Text>:
+                        <Text style={styles.nameHero}>Combat: {superHero.powerstats.combat}</Text>}
+                  </View>
                 </View>
                 </TouchableOpacity>
-     
               ))
             }
           </ScrollView>
@@ -76,3 +126,4 @@ const styles = StyleSheet.create({
 
   }
 })
+
