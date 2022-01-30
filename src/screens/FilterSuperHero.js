@@ -32,8 +32,8 @@ const FilterSuperHero = () => {
     navigation.navigate('showhero',showHero)
   }
   const orderBy =(more)=>{
-    if(more === 'moreStrong'){
-      console.log('morestrong');
+    if(more === 'morePower'){
+      console.log('morePower');
       heros.sort((o1,o2)=>{
         if(o1.powerstats.power<o2.powerstats.power){
           return -1;
@@ -44,9 +44,16 @@ const FilterSuperHero = () => {
         }
       })
     }else{
-      console.log('moreheight');
+      console.log('moreCombat');
+      // heros.sort((o1,o2)=>{
+      //   return o1.powerstats.combat.localeCompare(o2.powerstats.combat)
+      // })
       heros.sort((o1,o2)=>{
-        return o1.powerstats.combat.localeCompare(o2.powerstats.combat)
+        if (o1.powerstats.combat === o2.powerstats.combat) {
+          // Price is only important when cities are the same
+          return o2.powerstats.combat - o1.powerstats.combat;
+       }
+       return o1.powerstats.combat > o2.powerstats.combat ? 1 : -1;
       })
     }
     onRefresh()
@@ -69,8 +76,8 @@ const FilterSuperHero = () => {
             />
           }>
             <View style={{flexDirection:'row',justifyContent:'space-around',marginVertical:10}}>
-              <Button mode='contained' color='white' onPress={()=>orderBy('moreStrong')}>Greater power</Button>
-              <Button mode='contained' color='white' onPress={()=>orderBy('moreHeight')}>Better combat</Button>
+              <Button mode='contained' color='white' onPress={()=>orderBy('morePower')}>Greater power</Button>
+              <Button mode='contained' color='white' onPress={()=>orderBy('moreCombat')}>Better combat</Button>
             </View>
             {
               heros?.map((superHero)=>(
