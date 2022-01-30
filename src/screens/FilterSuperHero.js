@@ -6,6 +6,11 @@ import { ActivityIndicator, Avatar, Button } from 'react-native-paper';
 const wait = (timeout) => {
   return new Promise(resolve => setTimeout(resolve, timeout));
 }
+/**
+ * 
+ * @param {any}  
+ * @returns {void}
+ */
 const FilterSuperHero = () => {
   const [refreshing, setRefreshing] = React.useState(false);
 

@@ -5,7 +5,7 @@ import NavBar from '../components/NavBar';
 import { List } from 'react-native-paper';
 /**
  * 
- * @returns view
+ * @returns {void}
  */
 const ShowSuperHero = () => {
   const route = useRoute()
