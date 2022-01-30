@@ -36,9 +36,9 @@ const FilterSuperHero = () => {
       console.log('morestrong');
       heros.sort((o1,o2)=>{
         if(o1.powerstats.power<o2.powerstats.power){
-          return -1
+          return -1;
         }else if(o1.powerstats.power>o2.powerstats.power){
-          return 1
+          return 1;
         }else{
           return 0
         }
@@ -46,13 +46,7 @@ const FilterSuperHero = () => {
     }else{
       console.log('moreheight');
       heros.sort((o1,o2)=>{
-        if(o1.powerstats.combat<o2.powerstats.combat){
-          return -1
-        }else if(o1.powerstats.combat>o2.powerstats.combat){
-          return 1
-        }else{
-          return 0
-        }
+        return o1.powerstats.combat.localeCompare(o2.powerstats.combat)
       })
     }
     onRefresh()
